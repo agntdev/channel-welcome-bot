@@ -6,7 +6,12 @@ import type { StorageAdapter } from "grammy";
 // bot grows. Durable domain data must NOT live here — use the toolkit's
 // persistent storage (see AGENTS.md).
 export interface Session {
-  // example: step?: "awaiting_amount";
+  step?: "awaiting_set_text";
+  settings: {
+    auto_reply_text: string;
+    enabled: boolean;
+    notification_enabled: boolean;
+  };
 }
 
 export type Ctx = BotContext<Session>;
@@ -42,7 +47,13 @@ export interface BuildBotOptions {
  */
 export async function buildBot(token: string, opts: BuildBotOptions = {}) {
   const bot = createBot<Session>(token, {
-    initial: () => ({}),
+    initial: () => ({
+      settings: {
+        auto_reply_text: "Welcome! Thanks for posting.",
+        enabled: true,
+        notification_enabled: true,
+      },
+    }),
     storage: opts.storage,
   });
 

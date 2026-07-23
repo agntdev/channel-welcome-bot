@@ -1,15 +1,30 @@
 import { Composer } from "grammy";
+import type { Ctx } from "../bot.js";
+import { registerMainMenuItem, inlineButton, inlineKeyboard } from "../toolkit/index.js";
 
-// SCAFFOLD — generated from the bot blueprint BEFORE the agent runs.
-// Keep a LIVE registration (.command / .callbackQuery / …) so this feature is
-// never an empty stub. Replace the reply body with real logic + copy; if you
-// change the user-facing text, update tests/specs to match EXACTLY.
-// Do NOT rewrite src/bot.ts — buildBot() already auto-loads this module.
+registerMainMenuItem({ label: "🔀 Toggle", data: "toggle:run", order: 20 });
 
-const composer = new Composer();
+const composer = new Composer<Ctx>();
+
+const backToMenu = inlineKeyboard([[inlineButton("⬅️ Back to menu", "menu:main")]]);
+
+function statusText(enabled: boolean): string {
+  return enabled
+    ? "Auto-reply is now ON — new posts will get a reply."
+    : "Auto-reply is now OFF — new posts won't get a reply.";
+}
 
 composer.command("toggle", async (ctx) => {
-  await ctx.reply("Enable or disable auto-reply feature");
+  ctx.session.settings.enabled = !ctx.session.settings.enabled;
+  await ctx.reply(statusText(ctx.session.settings.enabled), { reply_markup: backToMenu });
+});
+
+composer.callbackQuery("toggle:run", async (ctx) => {
+  await ctx.answerCallbackQuery();
+  ctx.session.settings.enabled = !ctx.session.settings.enabled;
+  await ctx.editMessageText(statusText(ctx.session.settings.enabled), {
+    reply_markup: backToMenu,
+  });
 });
 
 export default composer;
