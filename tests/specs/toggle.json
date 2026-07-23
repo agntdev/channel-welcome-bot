@@ -1,0 +1,20 @@
+[
+  {
+    "name": "/toggle",
+    "steps": [
+      {
+        "expect": [
+          {
+            "method": "sendMessage",
+            "payload": {
+              "text": "Enable or disable auto-reply feature"
+            }
+          }
+        ],
+        "send": {
+          "text": "/toggle"
+        }
+      }
+    ]
+  }
+]
