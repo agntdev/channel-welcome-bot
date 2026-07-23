@@ -1,19 +1,17 @@
 [
   {
-    "name": "/set",
+    "name": "/set prompts for auto-reply text",
     "steps": [
       {
+        "send": { "text": "/set" },
         "expect": [
           {
             "method": "sendMessage",
             "payload": {
-              "text": "Set/update auto-reply text"
+              "text": "Send me the text you want posted as a reply under new channel posts."
             }
           }
-        ],
-        "send": {
-          "text": "/set"
-        }
+        ]
       }
     ]
   }
